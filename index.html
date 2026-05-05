@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Classical Ciphers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<nav>
+    <button id="nav-caesar" class="active g" onclick="goTo('caesar')">CAESAR</button>
+    <button id="nav-rail" onclick="goTo('rail')">RAIL FENCE</button>
+    <button id="nav-vig" onclick="goTo('vig')">VIGENÈRE</button>
+    <button id="nav-brute" onclick="goTo('brute')">BRUTE FORCE</button>
+
+</nav>
+
+<div class="wrap">
+
+    <!-- CAESAR -->
+    <section class="section" id="caesar">
+        <div class="sec-title g">CAESAR CIPHER<span class="weakness">⚠ ONLY 25 KEYS</span></div>
+        <div class="desc">Every letter shifts forward by the same fixed amount.</div>
+        <div class="input-area">
+            <input class="text-input" id="caesarText" value="HELLO" placeholder="Plaintext..." maxlength="14"/>
+            <input class="key-input" id="caesarKey" type="number" value="3" min="1" max="25"/>
+            <button class="btn primary-g" onclick="caesarRun('enc')">ENCRYPT</button>
+            <button class="btn primary-g" onclick="caesarRun('dec')">DECRYPT</button>
+        </div>
+        <div class="controls-row">
+            <button class="btn btn-icon" onclick="caesarPlay()">▶</button>
+            <button class="btn btn-icon" onclick="caesarPause()">⏸</button>
+            <button class="btn btn-icon" onclick="caesarStep(-1)">⏮</button>
+            <button class="btn btn-icon" onclick="caesarStep(1)">⏭</button>
+            <button class="btn btn-icon" onclick="caesarReset()">↺</button>
+            <span class="speed-label">SPEED</span>
+            <input class="speed-slider" type="range" id="caesarSpeed" min="1" max="3" value="2"/>
+        </div>
+        <div class="stage g">
+            <div class="stage-label">PLAINTEXT</div>
+            <div class="letters-row" id="caesarInput"></div>
+            <div class="arrow">▼</div>
+            <div class="wheel-wrap">
+                <canvas id="caesarWheel" class="wheel-canvas" width="200" height="200"></canvas>
+            </div>
+            <div class="arrow">▼</div>
+            <div class="stage-label">CIPHERTEXT</div>
+            <div class="letters-row" id="caesarOutput"></div>
+            <div class="step-info" id="caesarInfo">Press ▶ to start</div>
+        </div>
+        <div class="output-label">OUTPUT
+            <button class="copy-btn" onclick="copy('caesarResult',this)">COPY</button>
+        </div>
+        <div class="output-box empty" id="caesarResult">Will appear here when complete</div>
+    </section>
+
+    <!-- RAIL FENCE -->
+    <section class="section" id="rail">
+        <div class="sec-title b">RAIL FENCE CIPHER<span class="weakness">⚠ TINY KEY SPACE</span></div>
+        <div class="desc">Letters rearrange in a zigzag pattern across rails. Same letters, different order.</div>
+        <div class="input-area">
+            <input class="text-input" id="railText" value="WEAREDISCOVERED" placeholder="Plaintext..." maxlength="20"/>
+            <input class="key-input b" id="railKey" type="number" value="3" min="2" max="5"/>
+            <button class="btn primary-b" onclick="railRun('enc')">ENCRYPT</button>
+            <button class="btn primary-b" onclick="railRun('dec')">DECRYPT</button>
+        </div>
+        <div class="controls-row">
+            <button class="btn btn-icon" onclick="railPlay()">▶</button>
+            <button class="btn btn-icon" onclick="railPause()">⏸</button>
+            <button class="btn btn-icon" onclick="railStep(-1)">⏮</button>
+            <button class="btn btn-icon" onclick="railStep(1)">⏭</button>
+            <button class="btn btn-icon" onclick="railReset()">↺</button>
+            <span class="speed-label">SPEED</span>
+            <input class="speed-slider" type="range" id="railSpeed" min="1" max="3" value="2"/>
+        </div>
+        <div class="stage b">
+            <div class="stage-label">ZIGZAG GRID</div>
+            <div class="rail-grid" id="railGrid"></div>
+            <div class="arrow">▼</div>
+            <div class="stage-label">CIPHERTEXT (READ RAIL BY RAIL)</div>
+            <div class="letters-row" id="railOutput"></div>
+            <div class="step-info" id="railInfo">Press ▶ to start</div>
+        </div>
+        <div class="output-label">OUTPUT
+            <button class="copy-btn" onclick="copy('railResult',this)">COPY</button>
+        </div>
+        <div class="output-box b empty" id="railResult">Will appear here when complete</div>
+    </section>
+
+    <!-- VIGENÈRE -->
+    <section class="section" id="vig">
+        <div class="sec-title y">VIGENÈRE CIPHER<span class="weakness">⚠ KEYWORD-DRIVEN</span></div>
+        <div class="desc">A repeating keyword controls a different shift for each letter.</div>
+        <div class="input-area">
+            <input class="text-input" id="vigText" value="HELLO" placeholder="Plaintext..." maxlength="14"/>
+            <input class="key-input y" id="vigKey" value="KEY" placeholder="Keyword..." maxlength="8" style="width:100px;"/>
+            <button class="btn primary-y" onclick="vigRun('enc')">ENCRYPT</button>
+            <button class="btn primary-y" onclick="vigRun('dec')">DECRYPT</button>
+        </div>
+        <div class="controls-row">
+            <button class="btn btn-icon" onclick="vigPlay()">▶</button>
+            <button class="btn btn-icon" onclick="vigPause()">⏸</button>
+            <button class="btn btn-icon" onclick="vigStep(-1)">⏮</button>
+            <button class="btn btn-icon" onclick="vigStep(1)">⏭</button>
+            <button class="btn btn-icon" onclick="vigReset()">↺</button>
+            <span class="speed-label">SPEED</span>
+            <input class="speed-slider" type="range" id="vigSpeed" min="1" max="3" value="2"/>
+        </div>
+        <div class="stage y">
+            <div class="stage-label">KEYWORD (REPEATING)</div>
+            <div class="keyword-row" id="vigKeyRow"></div>
+            <div class="stage-label">PLAINTEXT</div>
+            <div class="letters-row" id="vigInput"></div>
+            <div class="arrow">▼</div>
+            <div class="stage-label">CIPHERTEXT</div>
+            <div class="letters-row" id="vigOutput"></div>
+            <div class="step-info" id="vigInfo">Press ▶ to start</div>
+        </div>
+        <div class="output-label">OUTPUT
+            <button class="copy-btn" onclick="copy('vigResult',this)">COPY</button>
+        </div>
+        <div class="output-box y empty" id="vigResult">Will appear here when complete</div>
+    </section>
+
+    <!-- BRUTE FORCE -->
+    <section class="section" id="brute">
+        <div class="sec-title r">BRUTE FORCE ATTACK<span class="weakness">⚠ CAESAR ONLY</span></div>
+        <div class="desc">Try all 25 shifts automatically. Chi-squared scoring finds the correct decryption.</div>
+
+        <div class="input-area">
+            <input class="text-input" id="bruteInput" placeholder="Paste ciphertext here..." />
+            <button class="btn primary-r" onclick="bruteRun()">⚡ ATTACK</button>
+            <button class="btn btn-icon" onclick="bruteReset()">↺</button>
+        </div>
+
+        <div class="stage r">
+            <div class="stage-label">ALL 25 SHIFTS — RANKED BY CHI-SQUARED (LOWER = BETTER ENGLISH MATCH)</div>
+            <div id="bruteResults"></div>
+            <div class="step-info" id="bruteInfo">Paste a Caesar ciphertext and press ATTACK</div>
+        </div>
+    </section>
+
+    <footer>CLASSICAL CIPHERS // EDUCATIONAL ANIMATION</footer>
+</div>
+
+<script src="js/ciphers.js"></script>
+<script src="js/caesar.js"></script>
+<script src="js/railfence.js"></script>
+<script src="js/vigenere.js"></script>
+<script src="js/brute.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
